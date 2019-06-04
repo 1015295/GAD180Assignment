@@ -12,15 +12,19 @@ public class PlayerController : MonoBehaviour
 
     public SpriteRenderer spriteFlip; //We wiill need an alternate method once we start using 3D models. Joe.
 
-    //The player can only jump whilst grounded. Add jumpable surfaces to the "Ground" layer in the inspector.
-    private bool isTouchingGround;
-    public Transform groundCheckPoint;
-    public float groundCheckRadius;
-    public LayerMask groundLayer;
+    //The player can only jump whilst grounded. Add jumpable surfaces to the "Ground" tag in the inspector.
+    private bool isTouchingGround = false;
 
     //Adds posibility of double jumping. 
     private int extraJumps;
     public int extraJumpsValue;
+
+    //The player can walljump if WallCheck box collider collides with "Ground" or "Wall" tags.
+    private bool isTouchingWall = false;
+
+    //Adds possiblity of wall jumping.
+    private int wallJumps;
+    public int wallJumpsValue;
 
 
     void Start()
@@ -41,21 +45,56 @@ public class PlayerController : MonoBehaviour
             spriteFlip.flipX = false;
         }
 
-        //Checks to see if double jumping is possible.
-        isTouchingGround = Physics2D.OverlapCircle(groundCheckPoint.position, groundCheckRadius, groundLayer);
+        //Resets extraJumps and wallJumps value when thouching ground.
         if(isTouchingGround == true)
         {
             extraJumps = extraJumpsValue;
+            wallJumps = wallJumpsValue;
         }
         if(Input.GetKeyDown(KeyCode.Space) && extraJumps > 0)
         {
-            rb.velocity = Vector2.up * jumpForce;
+            CharacterJump();
             extraJumps--;
+        }
+        if(Input.GetKeyDown(KeyCode.Space) && wallJumps > 0 && isTouchingWall == true)
+        {
+            CharacterJump();
+            wallJumps--;
         }
         else if(Input.GetKeyDown(KeyCode.Space) && extraJumps == 0 && isTouchingGround == true)
         {
-            rb.velocity = Vector2.up * jumpForce;
+            CharacterJump();
         }
+    }
+ 
+    //Checks if the player is touching the ground.
+    private void OnTriggerEnter(Collider other)
+    {
+        if(other.tag == "Ground")
+        {
+            isTouchingGround = true;
+        }
+        else if(other.tag == "Wall")
+        {
+            isTouchingWall = true;
+        }
+    }
+    private void OnTriggerExit(Collider other)
+    {
+        if(other.tag == "Ground")
+        {
+            isTouchingGround = false;
+        }
+        else if(other.tag == "Wall")
+        {
+            isTouchingWall = false;
+        }
+    }
+    
+    // Jumping stuff
+    void CharacterJump()
+    {
+        rb.velocity = Vector2.up * jumpForce;
     }
 
     void FixedUpdate()
