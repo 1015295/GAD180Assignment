@@ -16,21 +16,25 @@ public class PlayerController : MonoBehaviour
     private bool isTouchingGround = false;
 
     //Adds posibility of double jumping. 
-    private int extraJumps;
+    public int extraJumps;
     public int extraJumpsValue;
 
     //The player can walljump if WallCheck box collider collides with "Ground" or "Wall" tags.
     private bool isTouchingWall = false;
 
     //Adds possiblity of wall jumping.
-    private int wallJumps;
+    public int wallJumps;
     public int wallJumpsValue;
+
+    //Essential jumping variables.
+    public float jumpTimeCounter;
+    public float jumpTime;
+    public bool isJumping;
 
 
     void Start()
     {
         rb = GetComponent<Rigidbody>();
-        extraJumps = extraJumpsValue;
     }
 
     void Update()
@@ -53,17 +57,42 @@ public class PlayerController : MonoBehaviour
         }
         if(Input.GetKeyDown(KeyCode.Space) && extraJumps > 0)
         {
+        isJumping = true;
+        jumpTimeCounter = jumpTime;            
             CharacterJump();
             extraJumps--;
         }
         if(Input.GetKeyDown(KeyCode.Space) && wallJumps > 0 && isTouchingWall == true)
         {
+        isJumping = true;
+        jumpTimeCounter = jumpTime;            
             CharacterJump();
             wallJumps--;
         }
         else if(Input.GetKeyDown(KeyCode.Space) && extraJumps == 0 && isTouchingGround == true)
         {
+        isJumping = true;
+        jumpTimeCounter = jumpTime;            
             CharacterJump();
+        }
+
+        //Holding Jump allows for higher jumps
+        if (Input.GetKey(KeyCode.Space) && isJumping == true)
+        {
+            if (jumpTimeCounter > 0)
+            {
+                rb.velocity = Vector2.up * jumpForce;
+                jumpTimeCounter -= Time.deltaTime;
+            }
+            else
+            {
+                isJumping = false;
+            }
+        }
+
+        if (Input.GetKeyUp(KeyCode.Space))
+        {
+            isJumping = false;
         }
     }
  
