@@ -4,132 +4,112 @@ using UnityEngine;
 
 public class PlayerController : MonoBehaviour
 {
-    public float speed;
-    public float jumpForce;
-    private float moveInput;
+    //TODO: Use FixedUpdate for physics related code. IMPORTANT.
+    //TODO: We should detect the inputs in Update and handle them in FixedUpdate.
 
-    private Rigidbody rb;
+    //TODO: Stop player from hanging in the air when hitting the ceiling mid-jump.
+    
+    //Assign Player Number to P1 and P2 in the inspector.
+    public int playerNumber;
+    
+    public float speed = 6.0f;//Speed the player moves.
+    public float jumpForce = 13.5f;//Amount of force added when the player jumps.
+    public float fallMultiplier = 2.5f;//Faster falling after jumping.
+    public float lowJumpMultiplier = 2f;//Faster falling
+    public bool isTouchingWall;//Whether or not the player is touching a wall.
 
-    public SpriteRenderer spriteFlip; //We wiill need an alternate method once we start using 3D models. Joe.
+    private Vector3 moveDirection = Vector3.zero;
+    private CharacterController controller;
 
-    //The player can only jump whilst grounded. Add jumpable surfaces to the "Ground" tag in the inspector.
-    private bool isTouchingGround = false;
+    // Double Jumping
+    public bool canDoubleJump;//Whether or not the player can double jump.
+    private int extraJumps;//Amount of double jumps available to the player. Resets when grounded.
+    public int extraJumpsValue;//Maximum amount of double jumps available.
 
-    //Adds posibility of double jumping. 
-    public int extraJumps;
-    public int extraJumpsValue;
+    // Wall Jumping
+    public bool canWallJump;//Whether or not the player can wall jump.
+    private int wallJumps;//Amount of wall jumps available to the player. Resets when grounded.
+    public int wallJumpsValue;//Maximum amount of wall jumps available.
+    private Vector3 wallPos;//Checks to see where the colliding wall is positioned.
 
-    //The player can walljump if WallCheck box collider collides with "Ground" or "Wall" tags.
-    private bool isTouchingWall = false;
-
-    //Adds possiblity of wall jumping.
-    public int wallJumps;
-    public int wallJumpsValue;
-
-    //Essential jumping variables.
-    public float jumpTimeCounter;
-    public float jumpTime;
-    public bool isJumping;
-
-
+    // Start is called before the first frame update
     void Start()
     {
-        rb = GetComponent<Rigidbody>();
+        //Store our controller
+        controller = GetComponent<CharacterController>();
     }
 
-    void Update()
+    //Checks if the player is touching the wall.
+    void OnTriggerEnter(Collider other)
     {
-        //Rotating the sprite based on direction player is moving.
-        if(moveInput < 0)
-        {
-            spriteFlip.flipX = true;
-        }
-        else if(moveInput > 0)
-        {
-            spriteFlip.flipX = false;
-        }
-
-        //Resets extraJumps and wallJumps value when thouching ground.
-        if(isTouchingGround == true)
-        {
-            extraJumps = extraJumpsValue;
-            wallJumps = wallJumpsValue;
-        }
-        if(Input.GetKeyDown(KeyCode.Space) && extraJumps > 0)
-        {
-        isJumping = true;
-        jumpTimeCounter = jumpTime;            
-            CharacterJump();
-            extraJumps--;
-        }
-        if(Input.GetKeyDown(KeyCode.Space) && wallJumps > 0 && isTouchingWall == true)
-        {
-        isJumping = true;
-        jumpTimeCounter = jumpTime;            
-            CharacterJump();
-            wallJumps--;
-        }
-        else if(Input.GetKeyDown(KeyCode.Space) && extraJumps == 0 && isTouchingGround == true)
-        {
-        isJumping = true;
-        jumpTimeCounter = jumpTime;            
-            CharacterJump();
-        }
-
-        //Holding Jump allows for higher jumps
-        if (Input.GetKey(KeyCode.Space) && isJumping == true)
-        {
-            if (jumpTimeCounter > 0)
-            {
-                rb.velocity = Vector2.up * jumpForce;
-                jumpTimeCounter -= Time.deltaTime;
-            }
-            else
-            {
-                isJumping = false;
-            }
-        }
-
-        if (Input.GetKeyUp(KeyCode.Space))
-        {
-            isJumping = false;
-        }
-    }
- 
-    //Checks if the player is touching the ground.
-    private void OnTriggerEnter(Collider other)
-    {
-        if(other.tag == "Ground")
-        {
-            isTouchingGround = true;
-        }
-        else if(other.tag == "Wall")
+        if(other.tag == "Wall")
         {
             isTouchingWall = true;
+            wallPos = other.ClosestPoint(this.transform.position);
         }
     }
-    private void OnTriggerExit(Collider other)
+    void OnTriggerExit(Collider other)
     {
-        if(other.tag == "Ground")
-        {
-            isTouchingGround = false;
-        }
-        else if(other.tag == "Wall")
+        if(other.tag == "Wall")
         {
             isTouchingWall = false;
         }
-    }
-    
-    // Jumping stuff
-    void CharacterJump()
+    }    
+
+    // Update is called once per frame
+    void Update()
     {
-        rb.velocity = Vector2.up * jumpForce;
+        if (controller.isGrounded)
+        {
+            extraJumps = extraJumpsValue;
+            wallJumps = wallJumpsValue;            
+
+            moveDirection = new Vector3(Input.GetAxis("Horizontal_P" + playerNumber), 0, 0);
+            moveDirection = transform.TransformDirection(moveDirection);
+            moveDirection *= speed;
+
+            if(Input.GetButtonDown("Jump_P" + playerNumber))
+            {
+                moveDirection.y = jumpForce;
+            }
+        }
+
+        if (!controller.isGrounded)
+        {
+            //Double Jumping
+            if(Input.GetButtonDown("Jump_P" + playerNumber) && canDoubleJump && !isTouchingWall && extraJumps > 0)
+            {
+                moveDirection.y = jumpForce;
+                extraJumps--;
+            }
+
+            //Wall Jumping
+            if(Input.GetButtonDown("Jump_P" + playerNumber) && canWallJump && isTouchingWall && wallJumps > 0)
+            {
+                moveDirection.x = Mathf.Sign(transform.position.x - wallPos.x) * wallJumps; //Bounces player away from the colliding wall.
+                moveDirection.y = jumpForce;
+                wallJumps--;
+            }
+        }
+        
+        //Better Jumps. This allows jumping to be less "floaty".
+        if (controller.velocity.y < 0)
+        {
+            //Increases gravity while falling.
+            moveDirection += Vector3.up * Physics.gravity.y * (fallMultiplier - 1) * Time.deltaTime;
+        }
+        else if (controller.velocity.y > 0 && !Input.GetButton ("Jump_P" + playerNumber))
+        {
+            //Shorter jumps by only tapping Jump button.
+            moveDirection += Vector3.up * Physics.gravity.y * (lowJumpMultiplier - 1) * Time.deltaTime;
+        }
+
+        moveDirection.y += Physics.gravity.y * Time.deltaTime;
+        controller.Move(moveDirection * Time.deltaTime);
     }
 
     void FixedUpdate()
     {
-        //Movement stuff
-        moveInput = Input.GetAxis("Horizontal");
-        rb.velocity = new Vector2(moveInput * speed, rb.velocity.y);
+        //TODO: Place all physics related code here. IMPORTANT.
     }
 }
