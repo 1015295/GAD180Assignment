@@ -5,6 +5,10 @@ TagManager:
   serializedVersion: 2
   tags:
   - Wall
+  - Player1
+  - Player2
+  - GameManager
+  - Door
   layers:
   - Default
   - TransparentFX
