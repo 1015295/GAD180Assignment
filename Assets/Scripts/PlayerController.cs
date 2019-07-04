@@ -5,7 +5,6 @@ using UnityEngine;
 public class PlayerController : MonoBehaviour
 {    
     public int playerNumber;//Assign Player Number to P1 and P2 in the inspector. Player 1 = 1, Player 2 = 2 etc.
-    public int vesselType = 0;//What vessel the player character is. Default ghost = 0. TODO: Generate array possibly in AbilityManager script.
     
     public float speed = 6.0f;//Speed the player moves.
     public float jumpForce = 15f;//Amount of force added when the player jumps.
@@ -17,18 +16,22 @@ public class PlayerController : MonoBehaviour
     private CharacterController controller;
 
     // Double Jumping
-    public bool canDoubleJump;//Whether or not the player can double jump.
     private int extraJumps;//Amount of double jumps available to the player. Resets when grounded.
     public int extraJumpsValue;//Maximum amount of double jumps available.
 
     // Wall Jumping
-    public bool canWallJump;//Whether or not the player can wall jump.
-    private int wallJumps;//Amount of wall jumps available to the player. Resets when grounded.
-    public int wallJumpsValue;//Maximum amount of wall jumps available.
     private Vector3 wallPos;//Checks to see where the colliding wall is positioned.
 
-    private bool isGhost = true;//
-    private bool isVessel = false;//
+    // Teleporting
+    private Vector3 playerPosition;//Position of the player when using the Telephone ability
+    private Vector3 vesselPosition;//Position of the paired Telephone when the player uses the Telephone ability.
+    
+    // Vessel Types - Probably better to do an array or enums. Doing this for now. Public booleans just for sake of testing, change to private later.
+    public bool isGhost;
+    public bool isDoll;
+    public bool isLamp;
+    public bool isTelephone;
+    public bool isMouse;
 
     // Start is called before the first frame update
     void Start()
@@ -60,7 +63,6 @@ public class PlayerController : MonoBehaviour
         if (controller.isGrounded)
         {
             extraJumps = extraJumpsValue;
-            wallJumps = wallJumpsValue;            
 
             moveDirection = new Vector3(Input.GetAxis("Horizontal_P" + playerNumber), 0, 0);
             moveDirection = transform.TransformDirection(moveDirection);
@@ -75,18 +77,17 @@ public class PlayerController : MonoBehaviour
         if (!controller.isGrounded)
         {
             //Double Jumping
-            if(Input.GetButtonDown("Jump_P" + playerNumber) && canDoubleJump && !isTouchingWall && extraJumps > 0)
+            if(Input.GetButtonDown("Jump_P" + playerNumber) && !isTouchingWall && extraJumps > 0)
             {
                 moveDirection.y = jumpForce;
                 extraJumps--;
             }
 
             //Wall Jumping
-            if(Input.GetButtonDown("Jump_P" + playerNumber) && canWallJump && isTouchingWall && wallJumps > 0)
+            if(Input.GetButtonDown("Jump_P" + playerNumber) && isTouchingWall)
             {
                 moveDirection.x = Mathf.Sign(transform.position.x - wallPos.x) * 5; //Bounces player away from the colliding wall.
                 moveDirection.y = jumpForce;
-                //wallJumps--; //Currently disabled, we are going with infinite wall jumping as of Week 4.
             }
         }
         
@@ -102,46 +103,42 @@ public class PlayerController : MonoBehaviour
             moveDirection += Vector3.up * Physics.gravity.y * (lowJumpMultiplier - 1) * Time.deltaTime;
         }
 
+        //Vessel stuff
+        if(Input.GetButtonDown("Special_P" + playerNumber))
+        {
+            if(isGhost)
+            {
+                //Do shit
+            }
+
+            if(isDoll)
+            {
+                //Do shit
+            }
+
+            if(isLamp)
+            {
+                //Do shit
+            }
+
+            if(isTelephone)
+            {
+                playerPosition = transform.position; //Gets players current position. Vessel will move here.
+                vesselPosition = GameObject.Find("Telephone").transform.position; //Gets vessels current position. Player will move here
+
+                controller.enabled = false; //CharacterController messes with transform.position so I'm disabling it.
+                transform.position = vesselPosition; //Player moves to Vessel position.
+                GameObject.Find("Telephone").transform.position = playerPosition; //Vessel moves to the tempPosition we got earlier.
+                controller.enabled = true; //Re-enable the CharacterController.
+            }
+
+            if(isMouse)
+            {
+                //Do shit
+            }            
+        }
+
         moveDirection.y += Physics.gravity.y * Time.deltaTime;
         controller.Move(moveDirection * Time.deltaTime);
-
-        //Vessel stuff
-        //TODO: Assign Inputs in Project Settings before uncommenting this.
-        /*
-        if (isVessel == true);
-        {
-            isGhost = false;
-            if(Input.GetbuttonDown("Special_P" + playerNumber))
-            {
-                //Add special ability here
-                SpecialAbility();
-            }
-        }
-        
-        if (isGhost ==true);
-        {
-            isVessel = false;
-            if(Input.GetbuttonDown("Special_P" + playerNumber))
-            {
-                //Add possess function here
-                Possess();
-            }
-        }
-        */
-
-        void SpecialAbility()
-        {
-            //TODO:
-            //Make separate script for this, perhaps AbilityManager. Makes it easier to add/modify special abilities.
-        }
-
-        void Possess()
-        {
-            //TODO:
-            //Figure this shit out.
-            //Need to replace mesh components, possibly collider too.
-            //Assign tag based on vessel possessed.
-            //Or, change vesselType int.
-        }
     }
 }
