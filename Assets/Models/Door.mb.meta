@@ -48,7 +48,22 @@ ModelImporter:
     4300002: pCube3
     4300004: pCylinder2
     4300006: pCube4
-  externalObjects: {}
+  externalObjects:
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: blinn1
+    second: {fileID: 2100000, guid: 669049051acbc4f6abf59be8799ec8e6, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: blinn2
+    second: {fileID: 2100000, guid: b575fb54253e2a445bc73a290f7f0cc9, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: lambert4
+    second: {fileID: 10756, guid: 0000000000000000e000000000000000, type: 0}
   materials:
     importMaterials: 1
     materialName: 0

@@ -19,7 +19,17 @@ ModelImporter:
     3300002: pCube2
     4300000: pCube2
     4300002: pasted__pCube2
-  externalObjects: {}
+  externalObjects:
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: blinn1
+    second: {fileID: 2100000, guid: b575fb54253e2a445bc73a290f7f0cc9, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: pasted__blinn1
+    second: {fileID: 2100000, guid: b575fb54253e2a445bc73a290f7f0cc9, type: 2}
   materials:
     importMaterials: 1
     materialName: 0

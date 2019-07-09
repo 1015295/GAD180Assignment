@@ -53,7 +53,12 @@ ModelImporter:
     4300008: pCylinder5
     4300010: pasted__pCylinder3
     4300012: pCylinder6
-  externalObjects: {}
+  externalObjects:
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: blinn1
+    second: {fileID: 2100000, guid: 707d12b4c528eca46bf0509cc1479873, type: 2}
   materials:
     importMaterials: 1
     materialName: 0
