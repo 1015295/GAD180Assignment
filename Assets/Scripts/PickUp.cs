@@ -42,7 +42,7 @@ public class PickUp : MonoBehaviour
     void KeyCollection()
     {
 
-        if(iBelongTo.ToString() == "Player1")
+        if(iBelongTo.ToString() == "Player1" && KeyHolder.player1Doll == true)
         {
 
             KeyHolder.player1Keys += 1;
@@ -51,7 +51,7 @@ public class PickUp : MonoBehaviour
 
         }
 
-        if(iBelongTo.ToString() == "Player2")
+        if(iBelongTo.ToString() == "Player2" && KeyHolder.player2Doll == true)
         {
 
             KeyHolder.player2Keys += 1;

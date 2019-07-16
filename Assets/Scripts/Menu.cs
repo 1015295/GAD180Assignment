@@ -6,7 +6,8 @@ using UnityEngine.SceneManagement;
 public class Menu : MonoBehaviour
 {
 
-    public GameObject pauseMenue;
+    public GameObject pauseMenu;
+    public GameObject nextSceneMenu;
 
     void Update()
     {
@@ -31,7 +32,7 @@ public class Menu : MonoBehaviour
     {
 
         Time.timeScale = 0;
-        pauseMenue.SetActive(true);
+        pauseMenu.SetActive(true);
 
 
     }
@@ -40,7 +41,24 @@ public class Menu : MonoBehaviour
     {
 
         Time.timeScale = 1;
-        pauseMenue.SetActive(false);
+        pauseMenu.SetActive(false);
+
+    }
+
+    public void NextSceneMenu()
+    {
+
+        Time.timeScale = 0;
+        nextSceneMenu.SetActive(true);
+
+    }
+
+    public void NextScene()
+    {
+
+        int nextSceneIndex = GameObject.FindGameObjectWithTag("GameManager").GetComponent<GameManager>().nextScene;
+        Time.timeScale = 1;
+        SceneManager.LoadScene(nextSceneIndex);
 
     }
     // when called loads the menu scene

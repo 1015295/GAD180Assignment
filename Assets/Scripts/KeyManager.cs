@@ -4,19 +4,23 @@ using UnityEngine;
 
 public class KeyManager : MonoBehaviour
 {
-
+    //how many keys players have
     public int player1Keys;
     public int player2Keys;
+    //how many key players need
     public int keysNeeded;
+    //array of doors
     public GameObject[] doors;
-    public bool player1Doll;
-    public bool player2Doll;
+    //if the players are possesing the doll
+    public bool player1Doll = false;
+    public bool player2Doll = false;
+    //the active doors
     private GameObject player1Door;
     private GameObject player2Door;
 
     void Start()
     {
-
+        //finds the doors and ads them to a array
         doors = GameObject.FindGameObjectsWithTag("Door");
 
     }
@@ -24,7 +28,22 @@ public class KeyManager : MonoBehaviour
     void Update()
     {
 
-        if(player1Doll == false && player1Door != null)
+        if (GameObject.FindGameObjectWithTag("Player1").GetComponent<PlayerController>().isDoll == true)
+        {
+
+            player1Doll = true;
+
+        }
+
+        if (GameObject.FindGameObjectWithTag("Player2").GetComponent<PlayerController>().isDoll == true)
+        {
+
+            player2Doll = true;
+
+        }
+
+        //disables the active doors and clears the active door gameobject
+        if (player1Doll == false && player1Door != null)
         {
 
             player1Door.GetComponent<Door>().isActive = false;
@@ -40,6 +59,7 @@ public class KeyManager : MonoBehaviour
 
         }
 
+        //runs the slect door function
         if(player1Keys == keysNeeded || player2Keys == keysNeeded)
         {
 
@@ -53,7 +73,7 @@ public class KeyManager : MonoBehaviour
         }
         
     }
-
+    //selects a door and activates it 
     void SelectDoor()
     {
         int activeDoor;

@@ -40,6 +40,20 @@ public class Door : MonoBehaviour
 
             gameObject.GetComponent<MeshRenderer>().material = enterMaterial;
 
+            if(hasAccess.ToString() == "Player1")
+            {
+
+                GameObject.FindGameObjectWithTag("GameManager").GetComponent<GameManager>().Player1Win();
+
+            }
+            else if(hasAccess.ToString() == "Player2")
+            {
+
+                GameObject.FindGameObjectWithTag("GameManager").GetComponent<GameManager>().Player2Win();
+
+            }
+            GameObject.FindGameObjectWithTag("GameManager").GetComponent<Menu>().NextSceneMenu();
+
         }
 
     }
