@@ -52,7 +52,27 @@ public class Door : MonoBehaviour
                 GameObject.FindGameObjectWithTag("GameManager").GetComponent<GameManager>().Player2Win();
 
             }
-            GameObject.FindGameObjectWithTag("GameManager").GetComponent<Menu>().NextSceneMenu();
+
+            if(PlayerPrefs.GetInt("Player1Wins") == 2 || PlayerPrefs.GetInt("Player2Wins") == 2)
+            {
+
+                GameObject.FindGameObjectWithTag("GameManager").GetComponent<Menu>().WinScreen();
+
+            }
+
+            /*if (PlayerPrefs.GetInt("Player1Wins") < 2 || PlayerPrefs.GetInt("Player2Wins") < 2)
+            {
+
+                GameObject.FindGameObjectWithTag("GameManager").GetComponent<Menu>().NextSceneMenu();
+
+            }*/
+
+            if (PlayerPrefs.GetInt("Player1Wins") < 2 && PlayerPrefs.GetInt("Player2Wins") < 2)
+            {
+
+                GameObject.FindGameObjectWithTag("GameManager").GetComponent<Menu>().NextSceneMenu();
+
+            }
 
         }
 

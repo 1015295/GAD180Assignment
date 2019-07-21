@@ -9,7 +9,7 @@ public class GameManager : MonoBehaviour
     public int startScene;
     public int p1Win1;
     public int p2Win1;
-    public int nextScene;
+    //public int nextScene;
 
     private int player1Wins;
     private int player2Wins;
@@ -18,43 +18,52 @@ public class GameManager : MonoBehaviour
 
     void Start()
     {
-        
 
+        Scene scene = SceneManager.GetActiveScene();
+
+        if(scene.name == "MainMenu")
+        {
+
+            PlayerPrefs.SetInt("Player1Wins", 0);
+            PlayerPrefs.SetInt("Player1Wins", 0);
+            PlayerPrefs.SetInt("NextScene", 0);
+
+        }
 
     }
 
     void Update()
     {
         
-        if(player1Wins == 0 && player2Wins == 0)
+        if(PlayerPrefs.GetInt("Player1Wins") == 0 && PlayerPrefs.GetInt("Player2Wins") == 0)
         {
 
-            nextScene = startScene;
-            Debug.Log(nextScene);
+            PlayerPrefs.SetInt("NextScene", startScene);
+            
         }
-        else if(player1Wins == 1 && player2Wins == 0)
+        else if(PlayerPrefs.GetInt("Player1Wins") == 1 && PlayerPrefs.GetInt("Player2Wins") == 0)
         {
 
-            nextScene = p1Win1;
-            Debug.Log(nextScene);
-
-        }
-        else if(player2Wins == 1 && player1Wins == 0)
-        {
-
-            nextScene = p2Win1;
+            PlayerPrefs.SetInt("NextScene", p1Win1);
+            
 
         }
-        else if(player1Wins == 2 && player2Wins == 0)
+        else if(PlayerPrefs.GetInt("Player1Wins") == 0 && PlayerPrefs.GetInt("Player2Wins") == 1)
         {
 
-
+            PlayerPrefs.SetInt("NextScene", p2Win1);
 
         }
-        else if(player2Wins == 2 && player1Wins == 0)
+        else if(PlayerPrefs.GetInt("Player1Wins") == 2 && PlayerPrefs.GetInt("Player2Wins") == 0)
         {
 
+            Debug.Log("Player 1 Wins");
 
+        }
+        else if(PlayerPrefs.GetInt("Player1Wins") == 0 && PlayerPrefs.GetInt("Player2Wins") == 2)
+        {
+
+            Debug.Log("Player 2 Wins");
 
         }
 
@@ -64,28 +73,34 @@ public class GameManager : MonoBehaviour
     public void Player1Win()
     {
 
-        player1Wins += 1;
-        player2Wins -= 1;
-        if(player2Wins < 0)
+        PlayerPrefs.SetInt("Player1Wins", PlayerPrefs.GetInt("Player1Wins") + 1);
+        PlayerPrefs.SetInt("Player2Wins", PlayerPrefs.GetInt("Player2Wins") - 1);
+        if (PlayerPrefs.GetInt("Player2Wins") < 0)
         {
 
-            player2Wins = 0;
+            PlayerPrefs.SetInt("Player2Wins", 0);
 
         }
+        
+        Debug.Log(PlayerPrefs.GetInt("Player1Wins"));
+        Debug.Log(PlayerPrefs.GetInt("Player2Wins"));
 
     }
 
     public void Player2Win()
     {
 
-        player2Wins += 1;
-        player1Wins -= 1;
-        if(player1Wins < 0)
+        PlayerPrefs.SetInt("Player1Wins", PlayerPrefs.GetInt("Player1Wins") - 1);
+        PlayerPrefs.SetInt("Player2Wins", PlayerPrefs.GetInt("Player2Wins") + 1);
+        if (PlayerPrefs.GetInt("Player1Wins") < 0)
         {
 
-            player1Wins = 0;
+            PlayerPrefs.SetInt("Player1Wins", 0);
 
         }
+        
+        Debug.Log(PlayerPrefs.GetInt("Player1Wins"));
+        Debug.Log(PlayerPrefs.GetInt("Player2Wins"));
 
     }
 

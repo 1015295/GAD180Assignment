@@ -8,6 +8,8 @@ public class Menu : MonoBehaviour
 
     public GameObject pauseMenu;
     public GameObject nextSceneMenu;
+    public GameObject player1WinMenu;
+    public GameObject player2WinMenu;
 
     void Update()
     {
@@ -44,7 +46,7 @@ public class Menu : MonoBehaviour
         pauseMenu.SetActive(false);
 
     }
-
+    //screen that directs the player to the next scene
     public void NextSceneMenu()
     {
 
@@ -52,11 +54,11 @@ public class Menu : MonoBehaviour
         nextSceneMenu.SetActive(true);
 
     }
-
+    //function that launches the next scene
     public void NextScene()
     {
 
-        int nextSceneIndex = GameObject.FindGameObjectWithTag("GameManager").GetComponent<GameManager>().nextScene;
+        int nextSceneIndex = PlayerPrefs.GetInt("NextScene");
         Time.timeScale = 1;
         SceneManager.LoadScene(nextSceneIndex);
 
@@ -66,6 +68,25 @@ public class Menu : MonoBehaviour
     {
 
         SceneManager.LoadScene(0);
+
+    }
+    //activates the win screen depending on which player won
+    public void WinScreen()
+    {
+
+        if (PlayerPrefs.GetInt("Player1Wins") >= 2)
+        {
+
+            player1WinMenu.SetActive(true);
+
+        }
+
+        if (PlayerPrefs.GetInt("Player2Wins") >= 2)
+        {
+
+            player2WinMenu.SetActive(true);
+
+        }
 
     }
     // when called quits the game
