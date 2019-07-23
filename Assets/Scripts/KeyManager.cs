@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class KeyManager : MonoBehaviour
 {
@@ -18,11 +19,14 @@ public class KeyManager : MonoBehaviour
     private GameObject player1Door;
     private GameObject player2Door;
 
+
+    
     void Start()
     {
         //finds the doors and ads them to a array
         doors = GameObject.FindGameObjectsWithTag("Door");
 
+        
     }
 
     void Update()
