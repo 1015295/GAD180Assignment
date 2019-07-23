@@ -5,7 +5,7 @@ using UnityEngine.UI;
 
 public class UIManager : MonoBehaviour
 {
-    //UI for how many keys Player One has.
+    //UI for how many keys Player One and Player Two has.
     public Text keyText1;
     private string player1KeysText;
     public Text keyText2;
