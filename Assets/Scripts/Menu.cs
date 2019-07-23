@@ -66,7 +66,7 @@ public class Menu : MonoBehaviour
     // when called loads the menu scene
     public void BackToMenu()
     {
-
+        Time.timeScale = 1;
         SceneManager.LoadScene(0);
 
     }

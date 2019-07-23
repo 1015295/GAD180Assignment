@@ -98,8 +98,8 @@ MonoBehaviour:
   targets:
   - {fileID: 0}
   - {fileID: 0}
-  minZoom: 15
-  maxZoom: 3
-  zoomLimiter: 30
+  minZoom: 11
+  maxZoom: 10
+  zoomLimiter: 11
   offset: {x: 0, y: 0, z: -2}
   smoothTime: 0.5
