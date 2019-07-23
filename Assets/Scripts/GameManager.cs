@@ -26,7 +26,19 @@ public class GameManager : MonoBehaviour
 
             PlayerPrefs.SetInt("Player1Wins", 0);
             PlayerPrefs.SetInt("Player1Wins", 0);
-            PlayerPrefs.SetInt("NextScene", 0);
+            PlayerPrefs.SetInt("NextScene", startScene);
+            PlayerPrefs.SetInt("StartScene", startScene);
+            PlayerPrefs.SetInt("P1Win1", p1Win1);
+            PlayerPrefs.SetInt("P2Win1", p2Win1);
+
+        }
+
+        if(scene.name != "MainMenu")
+        {
+
+            startScene = PlayerPrefs.GetInt("StartScene");
+            p1Win1 = PlayerPrefs.GetInt("P1Win1");
+            p2Win1 = PlayerPrefs.GetInt("P2Win1");
 
         }
 
