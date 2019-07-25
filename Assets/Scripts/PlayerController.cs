@@ -108,7 +108,10 @@ public class PlayerController : MonoBehaviour
         {
             if(isGhost)
             {
-                //Do shit
+                if(controller.transform.position.sqrMagnitude - GameObject.FindWithTag("Telephone").transform.position.sqrMagnitude > -35) //Checks if the vessel is close enough.
+                {
+                    print("This is a possession");
+                }
             }
 
             if(isDoll)
