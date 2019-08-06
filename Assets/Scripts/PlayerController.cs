@@ -11,6 +11,7 @@ public class PlayerController : MonoBehaviour
     public float fallMultiplier = 2.1f;//Faster falling after jumping.
     public float lowJumpMultiplier = 1.9f;//Faster falling
     public bool isTouchingWall;//Whether or not the player is touching a wall.
+    public bool isTouchingVessel;//Whether or not the player is touching a possessable vessel.
 
     private Vector3 moveDirection = Vector3.zero;
     private CharacterController controller;
@@ -40,7 +41,7 @@ public class PlayerController : MonoBehaviour
         controller = GetComponent<CharacterController>();
     }
 
-    //Checks if the player is touching the wall.
+    //Checks if the player is touching the wall or vessel.
     void OnTriggerEnter(Collider other)
     {
         if(other.tag == "Wall")
@@ -48,12 +49,22 @@ public class PlayerController : MonoBehaviour
             isTouchingWall = true;
             wallPos = other.ClosestPoint(this.transform.position);
         }
+
+        if (other.tag == "Vessel")
+        {
+            isTouchingVessel = true;
+        }
     }
     void OnTriggerExit(Collider other)
     {
         if(other.tag == "Wall")
         {
             isTouchingWall = false;
+        }
+
+        if (other.tag == "Vessel")
+        {
+            isTouchingVessel = false;
         }
     }    
 
@@ -103,15 +114,18 @@ public class PlayerController : MonoBehaviour
             moveDirection += Vector3.up * Physics.gravity.y * (lowJumpMultiplier - 1) * Time.deltaTime;
         }
 
+        //Vessel check
+        if(isTouchingVessel)
+        {
+
+        }
+
         //Vessel stuff
         if(Input.GetButtonDown("Special_P" + playerNumber))
         {
-            if(isGhost)
+            if(isGhost && isTouchingVessel)
             {
-                if(controller.transform.position.sqrMagnitude - GameObject.FindWithTag("Telephone").transform.position.sqrMagnitude > -35) //Checks if the vessel is close enough.
-                {
-                    print("This is a possession");
-                }
+                
             }
 
             if(isDoll)
