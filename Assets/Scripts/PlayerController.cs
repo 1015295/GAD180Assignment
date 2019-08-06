@@ -141,11 +141,11 @@ public class PlayerController : MonoBehaviour
             if(isTelephone)
             {
                 playerPosition = transform.position; //Gets players current position. Vessel will move here.
-                vesselPosition = GameObject.Find("Telephone").transform.position; //Gets vessels current position. Player will move here
+                vesselPosition = GameObject.FindGameObjectWithTag("Telephone").transform.position; //Gets vessels current position. Player will move here
 
                 controller.enabled = false; //CharacterController messes with transform.position so I'm disabling it.
                 transform.position = vesselPosition; //Player moves to Vessel position.
-                GameObject.Find("Telephone").transform.position = playerPosition; //Vessel moves to the tempPosition we got earlier.
+                GameObject.FindGameObjectWithTag("Telephone").transform.position = playerPosition; //Vessel moves to the tempPosition we got earlier.
                 controller.enabled = true; //Re-enable the CharacterController.
             }
 

@@ -10,6 +10,7 @@ TagManager:
   - GameManager
   - Door
   - Telephone
+  - Vessel
   layers:
   - Default
   - TransparentFX
