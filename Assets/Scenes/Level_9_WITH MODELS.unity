@@ -859,11 +859,6 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 7374464741548927510, guid: 037248772263158489d6895f488ad685,
-        type: 3}
-      propertyPath: orthographic size
-      value: 11.8
-      objectReference: {fileID: 0}
     - target: {fileID: 7374464741548927512, guid: 037248772263158489d6895f488ad685,
         type: 3}
       propertyPath: targets.Array.data[0]
@@ -888,6 +883,11 @@ PrefabInstance:
         type: 3}
       propertyPath: zoomLimiter
       value: 11
+      objectReference: {fileID: 0}
+    - target: {fileID: 7374464741548927510, guid: 037248772263158489d6895f488ad685,
+        type: 3}
+      propertyPath: orthographic size
+      value: 11.8
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 037248772263158489d6895f488ad685, type: 3}
@@ -19841,14 +19841,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2c4a46db754873a408545140c5d39469, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  player1Keys: 1
+  player1Keys: 0
   player2Keys: 0
   keysNeeded: 2
   doors:
   - {fileID: 2124093509}
   - {fileID: 1279827867}
   - {fileID: 149640834}
-  player1Doll: 1
+  player1Doll: 0
   player2Doll: 0
 --- !u!4 &1695997670
 Transform:
@@ -25574,11 +25574,6 @@ PrefabInstance:
       propertyPath: m_Name
       value: Player 2
       objectReference: {fileID: 0}
-    - target: {fileID: 3732906537762437032, guid: bd207e2b3fc748648bf0c9acdbbb00cc,
-        type: 3}
-      propertyPath: m_TagString
-      value: Player
-      objectReference: {fileID: 0}
     - target: {fileID: 3732906537762437039, guid: bd207e2b3fc748648bf0c9acdbbb00cc,
         type: 3}
       propertyPath: m_LocalPosition.x
@@ -25634,16 +25629,6 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 3732906537762437035, guid: bd207e2b3fc748648bf0c9acdbbb00cc,
-        type: 3}
-      propertyPath: playerNumber
-      value: 2
-      objectReference: {fileID: 0}
-    - target: {fileID: 3732906537762437037, guid: bd207e2b3fc748648bf0c9acdbbb00cc,
-        type: 3}
-      propertyPath: m_Materials.Array.data[0]
-      value: 
-      objectReference: {fileID: 2100000, guid: 19831be4cd0d98242a5e2e181ced976c, type: 2}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: bd207e2b3fc748648bf0c9acdbbb00cc, type: 3}
 --- !u!1001 &2072101293

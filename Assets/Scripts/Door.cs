@@ -33,44 +33,49 @@ public class Door : MonoBehaviour
 
     private void OnTriggerEnter(Collider col)
     {
-        
-        if(col.gameObject.CompareTag(hasAccess.ToString()))
+
+        if(isActive == true)
         {
-            playerHasEntered = true;
 
-            gameObject.GetComponent<MeshRenderer>().material = enterMaterial;
-
-            if(hasAccess.ToString() == "Player1")
+            if (col.gameObject.CompareTag(hasAccess.ToString()))
             {
+                playerHasEntered = true;
 
-                GameObject.FindGameObjectWithTag("GameManager").GetComponent<GameManager>().Player1Win();
+                gameObject.GetComponent<MeshRenderer>().material = enterMaterial;
 
-            }
-            else if(hasAccess.ToString() == "Player2")
-            {
+                if (hasAccess.ToString() == "Player1")
+                {
 
-                GameObject.FindGameObjectWithTag("GameManager").GetComponent<GameManager>().Player2Win();
+                    GameObject.FindGameObjectWithTag("GameManager").GetComponent<GameManager>().Player1Win();
 
-            }
+                }
+                else if (hasAccess.ToString() == "Player2")
+                {
 
-            if(PlayerPrefs.GetInt("Player1Wins") == 2 || PlayerPrefs.GetInt("Player2Wins") == 2)
-            {
+                    GameObject.FindGameObjectWithTag("GameManager").GetComponent<GameManager>().Player2Win();
 
-                GameObject.FindGameObjectWithTag("GameManager").GetComponent<Menu>().WinScreen();
+                }
 
-            }
+                if (PlayerPrefs.GetInt("Player1Wins") == 2 || PlayerPrefs.GetInt("Player2Wins") == 2)
+                {
 
-            /*if (PlayerPrefs.GetInt("Player1Wins") < 2 || PlayerPrefs.GetInt("Player2Wins") < 2)
-            {
+                    GameObject.FindGameObjectWithTag("GameManager").GetComponent<Menu>().WinScreen();
 
-                GameObject.FindGameObjectWithTag("GameManager").GetComponent<Menu>().NextSceneMenu();
+                }
 
-            }*/
+                /*if (PlayerPrefs.GetInt("Player1Wins") < 2 || PlayerPrefs.GetInt("Player2Wins") < 2)
+                {
 
-            if (PlayerPrefs.GetInt("Player1Wins") < 2 && PlayerPrefs.GetInt("Player2Wins") < 2)
-            {
+                    GameObject.FindGameObjectWithTag("GameManager").GetComponent<Menu>().NextSceneMenu();
 
-                GameObject.FindGameObjectWithTag("GameManager").GetComponent<Menu>().NextSceneMenu();
+                }*/
+
+                if (PlayerPrefs.GetInt("Player1Wins") < 2 && PlayerPrefs.GetInt("Player2Wins") < 2)
+                {
+
+                    GameObject.FindGameObjectWithTag("GameManager").GetComponent<Menu>().NextSceneMenu();
+
+                }
 
             }
 

@@ -32,6 +32,24 @@ public class KeyManager : MonoBehaviour
     void Update()
     {
 
+        //disables the active doors and clears the active door gameobject
+        if (player1Doll == false && player1Door != null)
+        {
+
+            player1Door.GetComponent<Door>().isActive = false;
+            player1Door = null;
+
+        }
+
+        if (player2Doll == false && player2Door != null)
+        {
+
+            player2Door.GetComponent<Door>().isActive = false;
+            player2Door = null;
+
+        }
+
+        // checks which player has the doll depending the player script
         if (GameObject.FindGameObjectWithTag("Player1").GetComponent<PlayerController>().isDoll == true)
         {
 
@@ -46,30 +64,16 @@ public class KeyManager : MonoBehaviour
 
         }
 
-        //disables the active doors and clears the active door gameobject
-        if (player1Doll == false && player1Door != null)
-        {
 
-            player1Door.GetComponent<Door>().isActive = false;
-            player1Door = null;
-
-        }
-
-        if(player2Doll == false && player2Door != null)
-        {
-
-            player2Door.GetComponent<Door>().isActive = false;
-            player2Door = null;
-
-        }
 
         //runs the slect door function
         if(player1Keys == keysNeeded || player2Keys == keysNeeded)
         {
-
-            if(player1Doll == true || player2Doll == true)
+            Debug.Log("got the keys");
+            if (player1Doll == true || player2Doll == true)
             {
 
+                Debug.Log("SelectDoor");
                 SelectDoor();
 
             }
@@ -86,6 +90,7 @@ public class KeyManager : MonoBehaviour
         {
 
             activeDoor = Random.Range(0, doors.Length);
+            Debug.Log(activeDoor);
 
             player1Door = doors[activeDoor];
             player1Door.GetComponent<Door>().isActive = true;

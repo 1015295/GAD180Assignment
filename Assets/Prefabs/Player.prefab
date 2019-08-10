@@ -69,8 +69,8 @@ GameObject:
   - component: {fileID: 3732906537762437034}
   - component: {fileID: 3732906537762437033}
   m_Layer: 0
-  m_Name: Player1
-  m_TagString: Untagged
+  m_Name: Player
+  m_TagString: Player2
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -115,7 +115,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: 145e7e75be705ed419c270615491465b, type: 2}
+  - {fileID: 2100000, guid: 19831be4cd0d98242a5e2e181ced976c, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -161,12 +161,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a4f100e035199944c9dd611420290492, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  playerNumber: 1
+  playerNumber: 2
   speed: 6
   jumpForce: 15
   fallMultiplier: 2.1
   lowJumpMultiplier: 1.9
   isTouchingWall: 0
+  isTouchingVessel: 0
   extraJumpsValue: 1
   isGhost: 1
   isDoll: 0
