@@ -10,6 +10,7 @@ public class Menu : MonoBehaviour
     public GameObject nextSceneMenu;
     public GameObject player1WinMenu;
     public GameObject player2WinMenu;
+    public GameObject previousScene;
 
     void Update()
     {
@@ -70,20 +71,28 @@ public class Menu : MonoBehaviour
         SceneManager.LoadScene(0);
 
     }
+    // loads the starting scene
+    public void PreviousScene()
+    {
+
+        Time.timeScale = 0;
+        previousScene.SetActive(true);
+
+    }
     //activates the win screen depending on which player won
     public void WinScreen()
     {
 
         if (PlayerPrefs.GetInt("Player1Wins") >= 2)
         {
-
+            Time.timeScale = 0;
             player1WinMenu.SetActive(true);
 
         }
 
         if (PlayerPrefs.GetInt("Player2Wins") >= 2)
         {
-
+            Time.timeScale = 0;
             player2WinMenu.SetActive(true);
 
         }

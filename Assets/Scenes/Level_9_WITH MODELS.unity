@@ -11709,6 +11709,11 @@ PrefabInstance:
       propertyPath: isDoll
       value: 1
       objectReference: {fileID: 0}
+    - target: {fileID: 3732906537762437035, guid: bd207e2b3fc748648bf0c9acdbbb00cc,
+        type: 3}
+      propertyPath: playerNumber
+      value: 1
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: bd207e2b3fc748648bf0c9acdbbb00cc, type: 3}
 --- !u!1001 &1002536792

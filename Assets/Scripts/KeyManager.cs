@@ -69,11 +69,11 @@ public class KeyManager : MonoBehaviour
         //runs the slect door function
         if(player1Keys == keysNeeded || player2Keys == keysNeeded)
         {
-            Debug.Log("got the keys");
+            //Debug.Log("got the keys");
             if (player1Doll == true || player2Doll == true)
             {
 
-                Debug.Log("SelectDoor");
+                //Debug.Log("SelectDoor");
                 SelectDoor();
 
             }
@@ -90,7 +90,7 @@ public class KeyManager : MonoBehaviour
         {
 
             activeDoor = Random.Range(0, doors.Length);
-            Debug.Log(activeDoor);
+            //Debug.Log(activeDoor);
 
             player1Door = doors[activeDoor];
             player1Door.GetComponent<Door>().isActive = true;
