@@ -11,10 +11,11 @@ public class PlayerController : MonoBehaviour
     public float fallMultiplier = 2.1f;//Faster falling after jumping.
     public float lowJumpMultiplier = 1.9f;//Faster falling
     public bool isTouchingWall;//Whether or not the player is touching a wall.
-    public bool isTouchingVessel;//Whether or not the player is touching a possessable vessel.
+    public bool isTouchingTelephone;//Whether or not the player is touching a vessel.
+    public bool isTouchingDoll;//Whether or not the player is touching the doll.
 
     private Vector3 moveDirection = Vector3.zero;
-    private CharacterController controller;
+    private CharacterController controller; //I'm not liking the stock Unity CharacterController component. I want to change to movement using rigidbody at some point.
 
     // Double Jumping
     private int extraJumps;//Amount of double jumps available to the player. Resets when grounded.
@@ -27,12 +28,26 @@ public class PlayerController : MonoBehaviour
     private Vector3 playerPosition;//Position of the player when using the Telephone ability
     private Vector3 vesselPosition;//Position of the paired Telephone when the player uses the Telephone ability.
     
-    // Vessel Types - Probably better to do an array or enums. Doing this for now. Public booleans just for sake of testing, change to private later.
-    public bool isGhost;
-    public bool isDoll;
-    public bool isLamp;
-    public bool isTelephone;
-    public bool isMouse;
+    // Vessel Types
+    public enum PlayerType
+    {
+        Ghost,
+        Doll,
+        Lamp,
+        Telephone,
+        Mouse
+    }
+
+    private GameObject collidingVessel;
+    public GameObject possessedVessel;
+
+    public PlayerType playerType;
+    public Material ghostMesh; //Due to time constraints, we're changing colour for now rather than the mesh filter.
+    public Material dollMesh;
+    public Material telephoneMesh;
+
+    public bool isGhost; //Redundant, but Oscar's KeyManager script relies on this. Currently don't have time to change.
+    public bool isDoll; //Redundant, but Oscar's KeyManager script relies on this. Currently don't have time to change.
 
     // Start is called before the first frame update
     void Start()
@@ -41,7 +56,6 @@ public class PlayerController : MonoBehaviour
         controller = GetComponent<CharacterController>();
     }
 
-    //Checks if the player is touching the wall or vessel.
     void OnTriggerEnter(Collider other)
     {
         if(other.tag == "Wall")
@@ -50,10 +64,23 @@ public class PlayerController : MonoBehaviour
             wallPos = other.ClosestPoint(this.transform.position);
         }
 
-        if (other.tag == "Vessel")
+        if (other.tag == "Telephone" && isDoll == false)
         {
-            isTouchingVessel = true;
+            isTouchingTelephone = true;
+            collidingVessel = other.gameObject;
         }
+
+        if (other.tag == "Doll" && isDoll == false)
+        {
+            isTouchingDoll = true;
+            collidingVessel = other.gameObject;
+        }
+
+        //if (other.tag == "Player1" && isDoll == true || other.tag == "Player2" && isDoll == true) //I don't like this, but the project is due in 3 hours and I can't concentrate properly.
+        //{
+        //    ExitVessel();
+            //TODO: Halt player movement temporarily
+        //}
     }
     void OnTriggerExit(Collider other)
     {
@@ -62,9 +89,14 @@ public class PlayerController : MonoBehaviour
             isTouchingWall = false;
         }
 
-        if (other.tag == "Vessel")
+        if (other.tag == "Telephone")
         {
-            isTouchingVessel = false;
+            isTouchingTelephone = false;
+        }
+        
+        if (other.tag == "Doll")
+        {
+            isTouchingDoll = false;
         }
     }    
 
@@ -114,48 +146,92 @@ public class PlayerController : MonoBehaviour
             moveDirection += Vector3.up * Physics.gravity.y * (lowJumpMultiplier - 1) * Time.deltaTime;
         }
 
-        //Vessel check
-        if(isTouchingVessel)
-        {
-
-        }
-
         //Vessel stuff
         if(Input.GetButtonDown("Special_P" + playerNumber))
         {
-            if(isGhost && isTouchingVessel)
+            switch (playerType)
             {
-                
-            }
+                case PlayerType.Ghost:
+                    if (isTouchingTelephone == true)
+                    {
+                        gameObject.GetComponent<MeshRenderer>().material= telephoneMesh; //Replaces current mesh with the telephoneMesh
+                        playerType = PlayerType.Telephone; //The PlayerType is now "Telephone"
+                        possessedVessel = collidingVessel;
+                        possessedVessel.SetActive(false); //Disables the colliding telephone. TODO: When re-enabled, move its position to next to the player.
+                        Debug.Log("Possessing Telephone");
+                    }
 
-            if(isDoll)
-            {
-                //Do shit
-            }
+                    if (isTouchingDoll == true)
+                    {
+                        gameObject.GetComponent<MeshRenderer>().material= dollMesh; //Replaces current mesh with the dollMesh
+                        playerType = PlayerType.Doll; //The PlayerType is now "Doll"
+                        possessedVessel = collidingVessel;
+                        possessedVessel.SetActive(false); //Disables the colliding doll. TODO: When re-enabled, move its position to next to the player.
+                        isDoll = true; //Oscar's KeyManager script relies on the old isDoll boolean. Currently don't have time to change.
+                        Debug.Log("Possessing Doll");
+                    }
 
-            if(isLamp)
-            {
-                //Do shit
-            }
+                    else
+                    {
+                        Debug.Log("Not near a vessel");
+                        // Nothing should happen.
+                        // Possibly include an indicator for the player so they are aware of this.
+                    }
+                    break;
+                case PlayerType.Doll:
+                    // We haven't designed a special ability for the doll. Can change later.
+                    break;
+                case PlayerType.Lamp:
+                    // TODO: The lamp inverts gravity for the player.
+                    break;
+                case PlayerType.Telephone:
+                    playerPosition = transform.position; //Gets players current position. Vessel will move here.
+                    vesselPosition = GameObject.FindGameObjectWithTag("Telephone").transform.position; //Gets vessels current position. Player will move here
 
-            if(isTelephone)
-            {
-                playerPosition = transform.position; //Gets players current position. Vessel will move here.
-                vesselPosition = GameObject.FindGameObjectWithTag("Telephone").transform.position; //Gets vessels current position. Player will move here
+                    controller.enabled = false; //CharacterController messes with transform.position so I'm disabling it.
+                    transform.position = vesselPosition; //Player moves to Vessel position.
+                    GameObject.FindGameObjectWithTag("Telephone").transform.position = playerPosition; //Vessel moves to the tempPosition we got earlier.
+                    controller.enabled = true; //Re-enable the CharacterController.
+                    break;
+                case PlayerType.Mouse:
+                    // TODO: The mouse is capable of moving through walls.
+                    break;
+            }      
+        }
 
-                controller.enabled = false; //CharacterController messes with transform.position so I'm disabling it.
-                transform.position = vesselPosition; //Player moves to Vessel position.
-                GameObject.FindGameObjectWithTag("Telephone").transform.position = playerPosition; //Vessel moves to the tempPosition we got earlier.
-                controller.enabled = true; //Re-enable the CharacterController.
-            }
-
-            if(isMouse)
-            {
-                //Do shit
-            }            
+        if(Input.GetButtonDown("K")) // Testing exiting vessels.
+        {
+            possessedVessel.SetActive(true);
+            playerType = PlayerType.Ghost;
+            gameObject.GetComponent<MeshRenderer>().material= ghostMesh; //Replaces current mesh with the ghostMesh
         }
 
         moveDirection.y += Physics.gravity.y * Time.deltaTime;
         controller.Move(moveDirection * Time.deltaTime);
+    }
+
+    //void VesselCheck() //If I had time and a bit more knowledge, this function would cover everything related to possessing, rather than me typing it out twice within the PlayerType.Ghost case.
+    //{
+        /*
+        TODO:
+        - Check what vessel the player is touching,
+        - Change the player's mesh accordingly,
+        - Hide the colliding vessel gameObject,
+        - Assign a new PlayerType.
+        */
+    //}
+
+    void ExitVessel()
+    {
+        //controller.enabled = false;
+        possessedVessel.SetActive(true);
+        playerType = PlayerType.Ghost;
+        gameObject.GetComponent<MeshRenderer>().material= ghostMesh; //Replaces current mesh with the ghostMesh
+        /*
+        TODO:
+        - Change player mesh to the ghost,
+        - Assign "Ghost" as the new PlayerType,
+        - Place the previously hidden vessel gameObject next to the player.
+        */
     }
 }
